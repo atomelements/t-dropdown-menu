@@ -18,6 +18,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-selector/iron-selectable.html">
+<link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html">    
+<link rel="import" href="../iron-validatable-behavior/iron-validatable-behavior.html">
 <link rel="import" href="../t-input/t-master-input.html">
 
   <link rel="import" href="../paper-menu/paper-menu.html">
@@ -77,7 +79,9 @@ respectively.
       position: relative;
       text-align: left;
       cursor: pointer;
-      width:100%;
+      width:100%;   
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+      -webkit-tap-highlight-color: transparent;
       --paper-input-container-input: {
         overflow: hidden;
         white-space: nowrap;
@@ -149,8 +153,20 @@ respectively.
     font-size: var(--error-text-size);
     color: var(--error-color);
   }
-
+  #overlay{
+    background: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width:100%;
+    z-index: 99;
+  }
+  :host([focused]) #overlay{
+    display: none;
+  }
   </style>
+    <div id="overlay" on-click="open"></div>
     <paper-menu-button
       id="menuButton"
       vertical-align="top"
@@ -159,10 +175,12 @@ respectively.
       disabled="[[disabled]]"
       no-animations="[[noAnimations]]"
       on-iron-select="_onIronSelect"
+      on-iron-deselect="_onIronDeselect"
       opened="{{opened}}">
       <div class="dropdown-trigger">
         <t-master-input
           readonly
+          invalid="[[invalid]]"
           disabled="[[disabled]]"
           value="[[selectedItemLabel]]"
           placeholder="[[placeholder]]"
@@ -173,7 +191,6 @@ respectively.
         </t-master-input>
           <iron-icon icon="arrow-drop-down" suffix></iron-icon>
             <p class="error">{{errorMessage}}</p>
-
       </div>
       <content id="content" select=".dropdown-content"></content>
     </paper-menu-button>
@@ -200,7 +217,9 @@ respectively.
 
       behaviors: [
         Polymer.IronControlState,
-        Polymer.IronButtonState
+        Polymer.IronButtonState,
+        Polymer.IronFormElementBehavior,    
+        Polymer.IronValidatableBehavior
       ],
 
       properties: {
@@ -212,9 +231,8 @@ respectively.
         selectedItemLabel: {
           type: String,
           notify: true,
-          computed: '_computeSelectedItemLabel(selectedItem)'
+          readOnly: true
         },
-
         /**
          * The last selected item. An item is selected if the dropdown menu has
          * a child with class `dropdown-content`, and that child triggers an
@@ -225,6 +243,18 @@ respectively.
           notify: true,
           readOnly: true
         },
+
+        /**   
+         * The value for this element that will be used when submitting in    
+         * a form. It is read only, and will always have the same value   
+         * as `selectedItemLabel`.    
+         */   
+        value: {    
+          type: String,   
+          notify: true,   
+          readOnly: true    
+        },
+
 
         /**
          * The label for the dropdown.
@@ -311,6 +341,10 @@ respectively.
         'aria-haspopup': 'true'
       },
 
+      observers: [    
+        '_selectedItemChanged(selectedItem)'    
+      ],
+
       attached: function() {
         // NOTE(cdata): Due to timing, a preselected value in a `IronSelectable`
         // child will cause an `iron-select` event to fire while the element is
@@ -329,7 +363,14 @@ respectively.
         return Polymer.dom(this.$.content).getDistributedNodes()[0];
       },
 
-     
+     /**
+       * Show the dropdown content.
+       */
+      open: function() {
+        this.$.menuButton.open();
+      },
+
+
       /**
        * Hide the dropdown content.
        */
@@ -346,29 +387,44 @@ respectively.
         this._setSelectedItem(event.detail.item);
       },
 
+      /**   
+       * A handler that is called when `iron-deselect` is fired.    
+       *    
+       * @param {CustomEvent} event An `iron-deselect` event.   
+       */   
+      _onIronDeselect: function(event) {    
+        this._setSelectedItem(null);    
+      },
+
       /**
        * A handler that is called when the dropdown is tapped.
        *
        * @param {CustomEvent} event A tap event.
        */
       _onTap: function(event) {
-        if (Polymer.Gestures.findOriginalTarget(event) === this) {
+        // if(!this.opened){
+        //   this.open();
+        // }
+        if (Polymer.Gestures.findOriginalTarget(event) === this.$$('#input')) {
           this.open();
         }
       },
 
-      /**
+     /**
        * Compute the label for the dropdown given a selected item.
        *
        * @param {Element} selectedItem A selected Element item, with an
        * optional `label` property.
        */
-      _computeSelectedItemLabel: function(selectedItem) {
+      _selectedItemChanged: function(selectedItem) {
+        var value = '';
         if (!selectedItem) {
-          return '';
+          value = '';
+        } else {
+          value = selectedItem.label || selectedItem.textContent.trim();
         }
-
-        return selectedItem.label || selectedItem.textContent.trim();
+        this._setValue(value);
+        this._setSelectedItemLabel(value);
       },
 
       /**
