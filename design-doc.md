@@ -41,3 +41,11 @@
 * Configures whether the label of this form field lies within the field or floats outside it.
 * Shown as a checkbox in the property panel.
 * Default Value: Checked.
+
+### Some things to consider when designing
+* Have selected item bubble to top?
+* Have separator after bubbled item?
+* Have selected item in bold?
+* Have background color in selected item?
+* On mobile, should clicking on the dropdown open a dropdown or a full screen scrollable list?
+* Positioning - below or over emitting element? if over, then dynamic or aligned to top of emitting element?
