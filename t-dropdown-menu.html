@@ -402,9 +402,10 @@ respectively.
        * @param {CustomEvent} event A tap event.
        */
       _onTap: function(event) {
-        // if(!this.opened){
-        //   this.open();
-        // }
+        /*THIS IS THE PATCH FOR CLOSING THE ITEM ON CLICK OF SELECTED VALUE*/
+        if(event.target.tagName.toUpperCase() == 'PAPER-ITEM'){
+          this.close();
+        }/*ENDS HERE*/
         if (Polymer.Gestures.findOriginalTarget(event) === this.$$('#input')) {
           this.open();
         }
