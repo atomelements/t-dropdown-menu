@@ -444,7 +444,7 @@ respectively.
       },
 
         validate: function() {
-            if (this.required ){
+            if (this.required && !this.hidden){
               if(this.selectedItemLabel == '' || this.selectedItemLabel == undefined){
                 this.classList.add('no-value');
                 return false;
