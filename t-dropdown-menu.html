@@ -162,38 +162,59 @@ respectively.
     width:100%;
     z-index: 99;
   }
-  :host([focused]) #overlay{
-    display: none;
+  paper-menu-button ::content paper-material{
+    z-index: 9;
+    min-width: 250px;
+    -webkit-overflow-scrolling: touch;
+  }
+/*   paper-menu-button ::content paper-material::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+paper-menu-button ::content paper-material::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0,0,0,.5);
+  -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+} */
+  :host([opened]) #overlay{
+    z-index: 8;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    background: rgba(0,0,0,0.6);
   }
   </style>
-    <div id="overlay" on-click="open"></div>
-    <paper-menu-button
-      id="menuButton"
-      vertical-align="top"
-      horizontal-align="right"
-      vertical-offset="[[_computeMenuVerticalOffset(noLabelFloat)]]"
-      disabled="[[disabled]]"
-      no-animations="[[noAnimations]]"
-      on-iron-select="_onIronSelect"
-      on-iron-deselect="_onIronDeselect"
-      opened="{{opened}}">
-      <div class="dropdown-trigger">
-        <t-master-input
-          readonly
-          invalid="[[invalid]]"
-          disabled="[[disabled]]"
-          value="[[selectedItemLabel]]"
-          placeholder="[[placeholder]]"
-          always-float-label="[[alwaysFloatLabel]]"
-          no-label-float="[[noLabelFloat]]"
-          label="[[label]]"
-          required="[[required]]">
-        </t-master-input>
-          <iron-icon icon="arrow-drop-down" suffix></iron-icon>
-            <p class="error">{{errorMessage}}</p>
-      </div>
-      <content id="content" select=".dropdown-content"></content>
-    </paper-menu-button>
+    <div id="overlay" on-click="openClose"></div>
+      <paper-menu-button
+        id="menuButton"
+        vertical-align="{{verticalAlign}}"
+        horizontal-align="[[horizontalAlign]]"
+        vertical-offset="[[_computeMenuVerticalOffset(noLabelFloat)]]"
+        disabled="[[disabled]]"
+        no-animations="[[noAnimations]]"
+        on-iron-select="_onIronSelect"
+        on-iron-deselect="_onIronDeselect"
+        opened="{{opened}}">
+        <div class="dropdown-trigger">
+          <t-master-input
+            type="text"
+            readonly
+            invalid="[[invalid]]"
+            disabled="[[disabled]]"
+            value="[[selectedItemLabel]]"
+            placeholder="[[placeholder]]"
+            always-float-label="[[alwaysFloatLabel]]"
+            no-label-float="[[noLabelFloat]]"
+            label="[[label]]"
+            required="[[required]]">
+          </t-master-input>
+            <iron-icon icon="arrow-drop-down" suffix></iron-icon>
+              <p class="error">{{errorMessage}}</p>
+        </div>
+        <content id="content" select=".dropdown-content"></content>
+      </paper-menu-button>
   </template>
 </dom-module>
 <script>
@@ -219,7 +240,8 @@ respectively.
         Polymer.IronControlState,
         Polymer.IronButtonState,
         Polymer.IronFormElementBehavior,    
-        Polymer.IronValidatableBehavior
+        Polymer.IronValidatableBehavior,
+        Polymer.IronResizableBehavior
       ],
 
       properties: {
@@ -276,7 +298,9 @@ respectively.
         opened: {
           type: Boolean,
           notify: true,
-          value: false
+          value: false,
+          reflectToAttribute: true,
+          observer:'verticalCheck'
         },
 
         /**
@@ -324,7 +348,34 @@ respectively.
         noAnimations: {
           type: Boolean,
           value: false
-        }
+        },
+        /**
+           * The orientation against which to align the menu dropdown
+           * horizontally relative to the dropdown trigger.
+           */
+          horizontalAlign: {
+            type: String,
+            value: 'right'
+          },
+
+          /**
+           * The orientation against which to align the menu dropdown
+           * horizontally relative to the dropdown trigger.
+           */
+          verticalAlign: {
+            type: String,
+            value: 'top'
+          },
+
+          /**
+           * The orientation against which to align the menu dropdown
+           * vertically relative to the dropdown trigger.
+           */
+           verticalAlignTop: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          }
       },
 
       listeners: {
@@ -337,13 +388,15 @@ respectively.
       },
 
       hostAttributes: {
-        role: 'group',
+        role: 'combobox',   
+        'aria-autocomplete': 'none',    
         'aria-haspopup': 'true'
       },
 
       observers: [    
         '_selectedItemChanged(selectedItem)'    
       ],
+
 
       attached: function() {
         // NOTE(cdata): Due to timing, a preselected value in a `IronSelectable`
@@ -363,13 +416,56 @@ respectively.
         return Polymer.dom(this.$.content).getDistributedNodes()[0];
       },
 
+
+      openClose: function(){
+        if(!this.opened){
+          this.open();
+        }else{
+          this.close();
+        }
+      },
      /**
        * Show the dropdown content.
        */
       open: function() {
-        this.$.menuButton.open();
+          this.$$('#menuButton').open();
       },
 
+      /**
+       * Change size of the component;
+       */
+      verticalCheck:function(){
+          var clientPos = this.getBoundingClientRect();
+       /* if(window.innerHeight/2 > clientPos.top){
+
+            this.verticalAlignTop = true;
+
+        console.log(this.verticalAlignTop);
+          }else{
+            this.verticalAlignTop = false;
+
+        console.log(this.verticalAlignTop);
+          }*/
+        if(this.opened){
+          if(window.innerHeight/2 > clientPos.top){
+            this.verticalAlign = 'top';
+          }else{
+          var ele = this.querySelector('paper-material');
+          var itemApproxHeight = this.querySelectorAll('paper-item').length * 48;
+          ele.style.position ="fixed";
+            if(itemApproxHeight > clientPos.top){
+                ele.style.top = '15px';
+                ele.style.maxHeight = clientPos.top  + 'px';
+            }else{
+              ele.style.top = clientPos.top - itemApproxHeight + 'px';
+            }
+              ele.style.left = clientPos.left - 5 + 'px';
+              ele.style.overflow = 'auto';
+          }
+        }else{
+          this.querySelector('paper-material').removeAttribute('style');
+        }
+      },
 
       /**
        * Hide the dropdown content.
@@ -403,7 +499,10 @@ respectively.
        */
       _onTap: function(event) {
         /*THIS IS THE PATCH FOR CLOSING THE ITEM ON CLICK OF SELECTED VALUE*/
+
+
         if(event.target.tagName.toUpperCase() == 'PAPER-ITEM'){
+          event.stopPropagation();
           this.close();
         }/*ENDS HERE*/
         if (Polymer.Gestures.findOriginalTarget(event) === this.$$('#input')) {
