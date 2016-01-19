@@ -49,3 +49,9 @@
 * Have background color in selected item?
 * On mobile, should clicking on the dropdown open a dropdown or a full screen scrollable list?
 * Positioning - below or over emitting element? if over, then dynamic or aligned to top of emitting element?
+
+### References
+* [Drop-Down Usability: When You Should (and Shouldn't) Use Them](http://baymard.com/blog/drop-down-usability)
+* [Should I use a drop-down? Four steps for choosing form elements on the Web](http://baymard.com/blog/drop-down-usability)
+* [Redesigning The Country Selector](https://www.smashingmagazine.com/2011/11/redesigning-the-country-selector/)
+* [Dropdowns Should be the UI of Last Resort](http://www.lukew.com/ff/entry.asp?1950)
