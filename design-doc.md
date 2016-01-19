@@ -49,6 +49,9 @@
 * Have background color in selected item?
 * On mobile, should clicking on the dropdown open a dropdown or a full screen scrollable list?
 * Positioning - below or over emitting element? if over, then dynamic or aligned to top of emitting element?
+* Min and max width
+* Long text truncation & overflow options
+* Drop down vs drop up. The control should automatically decide this based on its position on screen.
 
 ### References
 * [Drop-Down Usability: When You Should (and Shouldn't) Use Them](http://baymard.com/blog/drop-down-usability)
