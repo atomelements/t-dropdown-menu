@@ -39,6 +39,9 @@
     "t-input": "atomelements/t-input#0.0.0", 
     "polymer": "Polymer/polymer#^1.0.0"
   },
+  "resolutions":{
+    "paper-styles": "^1.0.13"
+  },
   "devDependencies": {
     "web-component-tester": "*",
     "webcomponentsjs": "~0.7.14",
