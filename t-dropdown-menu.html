@@ -459,7 +459,11 @@ paper-menu-button ::content paper-material::-webkit-scrollbar-thumb {
             }else{
               ele.style.top = clientPos.top - itemApproxHeight + 'px';
             }
+            if(window.innerWidth/2 < clientPos.left+100){
+            	ele.style.right = window.innerWidth - clientPos.right + 'px';
+            }else{
               ele.style.left = clientPos.left - 5 + 'px';
+            }
               ele.style.overflow = 'auto';
           }
         }else{
