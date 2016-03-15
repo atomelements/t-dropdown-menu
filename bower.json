@@ -1,6 +1,6 @@
 {
   "name": "t-dropdown-menu",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "authors": [
     "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
     "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
@@ -24,7 +24,7 @@
     "test",
     "tests"
   ],
-  "dependencies": { 
+  "dependencies": {
     "iron-validatable-behavior": "PolymerElements/iron-validatable-behavior#^1.0.4",
     "iron-form-element-behavior": "PolymerElements/iron-form-element-behavior#^1.0.4",
     "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#^1.0.5",
