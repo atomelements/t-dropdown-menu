@@ -151,7 +151,7 @@ respectively.
         vertical-offset="[[_computeMenuVerticalOffset(noLabelFloat)]]"
         disabled="[[disabled]]"
         no-animations="[[noAnimations]]"
-        on-paper-dropdown-close="validate"
+        on-paper-dropdown-close="_fireBlurOnInput"
         on-iron-select="_onIronSelect"
         on-iron-deselect="_onIronDeselect"
         opened="{{opened}}">
@@ -503,13 +503,16 @@ respectively.
         // input has a floating label.
         return noLabelFloat ? -4 : 16;
       },
+      _fireBlurOnInput: function(){
+          var component = this;
+          setTimeout(function(){
+             component.querySelector('t-master-input input').fire('blur');
+          },10);
+      },
 
       validate: function() {
-        var component = this;
-        if (component.required && !component.hidden){
-          setTimeout(function(){
-             return component.querySelector('t-master-input').validate();
-          },10);
+        if (this.required && !this.hidden){
+          return this.querySelector('t-master-input').validate();
         }
         return true;
       }
