@@ -23,6 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../t-input/t-master-input.html">
 
   <link rel="import" href="../paper-menu/paper-menu.html">
+  <link rel="import" href="../paper-input/paper-input-error.html">
   <link rel="import" href="../paper-item/paper-item.html">
 
 <!--
@@ -98,22 +99,6 @@ respectively.
       @apply(--paper-dropdown-menu-disabled);
     }
 
-    :host([noink]) paper-ripple {
-      display: none;
-    }
-
-    :host([no-label-float]) paper-ripple {
-      top: 8px;
-    }
-
-    paper-ripple {
-      top: 20px;
-      left: 8px;
-      bottom: 16px;
-      right: 8px;
-
-      @apply(--paper-dropdown-menu-ripple);
-    }
 
     paper-menu-button {
       @apply(--paper-dropdown-menu-button);
@@ -133,26 +118,7 @@ respectively.
 
       @apply(--paper-dropdown-menu-icon);
     }
-    :host .error{
-    display: none;
-  }
-
-  /* line 12, D:\filter\less\date-input.less */
-  :host.no-value ::content input {
-   border-bottom: 2px solid ;
-   border-color:var(--error-color)!important;
-  }
-
-  :host.no-value .error {
-    display: block;
-    position: absolute;
-    top: 100%;
-    padding: 0;
-    margin: 0;
-    left: 0;
-    font-size: var(--error-text-size);
-    color: var(--error-color);
-  }
+ 
   #overlay{
     background: transparent;
     position: absolute;
@@ -167,15 +133,6 @@ respectively.
     min-width: 250px;
     -webkit-overflow-scrolling: touch;
   }
-/*   paper-menu-button ::content paper-material::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 7px;
-}
-paper-menu-button ::content paper-material::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: rgba(0,0,0,.5);
-  -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
-} */
   :host([opened]) #overlay{
     z-index: 8;
     top: 0;
@@ -194,6 +151,7 @@ paper-menu-button ::content paper-material::-webkit-scrollbar-thumb {
         vertical-offset="[[_computeMenuVerticalOffset(noLabelFloat)]]"
         disabled="[[disabled]]"
         no-animations="[[noAnimations]]"
+        on-paper-dropdown-close="validate"
         on-iron-select="_onIronSelect"
         on-iron-deselect="_onIronDeselect"
         opened="{{opened}}">
@@ -207,11 +165,11 @@ paper-menu-button ::content paper-material::-webkit-scrollbar-thumb {
             placeholder="[[placeholder]]"
             always-float-label="[[alwaysFloatLabel]]"
             no-label-float="[[noLabelFloat]]"
+            error-message="[[errorMessage]]"
             label="[[label]]"
             required="[[required]]">
           </t-master-input>
             <iron-icon icon="arrow-drop-down" suffix></iron-icon>
-              <p class="error">{{errorMessage}}</p>
         </div>
         <content id="content" select=".dropdown-content"></content>
       </paper-menu-button>
@@ -455,7 +413,7 @@ paper-menu-button ::content paper-material::-webkit-scrollbar-thumb {
           ele.style.position ="fixed";
             if(itemApproxHeight > clientPos.top){
                 ele.style.top = '15px';
-                ele.style.maxHeight = clientPos.top  + 'px';
+                ele.style.height = clientPos.top  + 'px';
             }else{
               ele.style.top = clientPos.top - itemApproxHeight + 'px';
             }
@@ -546,17 +504,15 @@ paper-menu-button ::content paper-material::-webkit-scrollbar-thumb {
         return noLabelFloat ? -4 : 16;
       },
 
-        validate: function() {
-            if (this.required && !this.hidden){
-              if(this.selectedItemLabel == '' || this.selectedItemLabel == undefined){
-                this.classList.add('no-value');
-                return false;
-              }else{
-                this.classList.remove('no-value');
-              }
-            }
-            return true;
+      validate: function() {
+        var component = this;
+        if (component.required && !component.hidden){
+          setTimeout(function(){
+             return component.querySelector('t-master-input').validate();
+          },10);
         }
+        return true;
+      }
     });
   })();
 </script>
