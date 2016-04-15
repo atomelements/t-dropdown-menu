@@ -23,6 +23,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <link rel="import" href="../t-dropdown-menu.html">
 
+  <link rel="import" href="../../t-shared-components/theme.html">
+
   <style>
     paper-menu {
       display: block;
@@ -72,7 +74,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div>
         <h4>Pre-selected Value1</h4>
         <div class="horizontal-section">
-          <t-dropdown-menu label="Dinosaurs">
+          <t-dropdown-menu label="Dinosaurs" required>
             <paper-menu class="dropdown-content" selected="1">
               <template is="dom-repeat" items="[[dinosaurs]]" as="dinosaur">
                 <paper-item>[[dinosaur]]</paper-item>
@@ -87,7 +89,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div>
         <h4>Pre-selected Value2</h4>
         <div class="horizontal-section">
-          <t-dropdown-menu label="Dinosaurs">
+          <t-dropdown-menu label="Dinosaurs" required>
             <paper-menu class="dropdown-content" selected="1">
               <template is="dom-repeat" items="[[dinosaurs]]" as="dinosaur">
                 <paper-item>[[dinosaur]]</paper-item>
@@ -101,7 +103,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div>
         <h4>Pre-selected Value3</h4>
         <div class="horizontal-section">
-          <t-dropdown-menu label="Dinosaurs">
+          <t-dropdown-menu label="Dinosaurs" required>
             <paper-menu class="dropdown-content" selected="1">
               <template is="dom-repeat" items="[[dinosaurs]]" as="dinosaur">
                 <paper-item>[[dinosaur]]</paper-item>
@@ -115,7 +117,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div>
         <h4>Pre-selected Value4</h4>
         <div class="horizontal-section">
-          <t-dropdown-menu label="Dinosaurs">
+          <t-dropdown-menu label="Dinosaurs" required>
             <paper-menu class="dropdown-content" selected="1">
               <template is="dom-repeat" items="[[dinosaurs]]" as="dinosaur">
                 <paper-item>[[dinosaur]]</paper-item>
@@ -129,7 +131,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div>
         <h4>Pre-selected Value5</h4>
         <div class="horizontal-section">
-          <t-dropdown-menu label="Dinosaurs">
+          <t-dropdown-menu label="Dinosaurs" required>
             <paper-menu class="dropdown-content" selected="1">
               <template is="dom-repeat" items="[[dinosaurs]]" as="dinosaur">
                 <paper-item>[[dinosaur]]</paper-item>
@@ -143,7 +145,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div>
         <h4>Pre-selected Value6</h4>
         <div class="horizontal-section">
-          <t-dropdown-menu label="Dinosaurs">
+          <t-dropdown-menu label="Dinosaurs" required>
             <paper-menu class="dropdown-content" selected="1">
               <template is="dom-repeat" items="[[dinosaurs]]" as="dinosaur">
                 <paper-item>[[dinosaur]]</paper-item>
@@ -167,6 +169,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
       </div>
     </div>
+
+    <t-master-input label="lalallas" required error-message="sasasa"></t-master-input>
   </template>
 
   <script>
