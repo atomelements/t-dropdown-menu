@@ -130,8 +130,10 @@ respectively.
   }
   paper-menu-button ::content paper-material{
     z-index: 1;
-    min-width: 250px;
     -webkit-overflow-scrolling: touch;
+  } 
+  paper-menu-button ::content .patchWidth{
+      max-width:inherit!important;
   }
   :host([opened]) #overlay{
     z-index: 1;
@@ -393,40 +395,40 @@ respectively.
        * Change size of the component;
        */
       verticalCheck:function(){
-          var clientPos = this.getBoundingClientRect();
-       /* if(window.innerHeight/2 > clientPos.top){
+          if (this.opened) {
+          var clientPos = this.getBoundingClientRect(),
+              winHeight = window.innerHeight,
+              winWidth = window.innerWidth,
+              ele = this.querySelector('paper-material');
 
-            this.verticalAlignTop = true;
-
-        console.log(this.verticalAlignTop);
-          }else{
-            this.verticalAlignTop = false;
-
-        console.log(this.verticalAlignTop);
-          }*/
-        if(this.opened){
-          if(window.innerHeight/2 > clientPos.top){
-            this.verticalAlign = 'top';
-          }else{
-          var ele = this.querySelector('paper-material');
-          var itemApproxHeight = this.querySelectorAll('paper-item').length * 48;
-          ele.style.position ="fixed";
-            if(itemApproxHeight > clientPos.top){
-                ele.style.top = '15px';
-                ele.style.height = clientPos.top  + 'px';
+              if (winHeight/2 > clientPos.top) {
+                this.verticalAlign = 'top';
+              }else{
+              var itemApproxHeight = this.querySelectorAll('paper-item').length * 48;
+              ele.style.position ="fixed";
+              ele.classList.add('patchWidth');
+                if(itemApproxHeight > clientPos.top){
+                    ele.style.top = '15px';
+                    ele.style.minHeight = clientPos.top + 'px';
+                }else{
+                  ele.style.top = clientPos.top - itemApproxHeight + 8 + 'px';
+                  ele.style.minHeight = itemApproxHeight + 'px';
+                }
+                if (winWidth / 2 < clientPos.left + 100) {
+                    ele.style.right = winWidth - clientPos.right + 'px';
+                    //ele.style.maxWidth = 100 + 'px';
+                }else{
+                  ele.style.left = clientPos.left - 5 + 'px';
+                }
+                  ele.style.overflow = 'auto';
+              }
             }else{
-              ele.style.top = clientPos.top - itemApproxHeight + 'px';
+              var ele = this.querySelector('paper-material');
+              ele.removeAttribute('style');
+              if (ele.classList.contains('patchWidth')) {
+                  ele.classList.remove('patchWidth');
+              }
             }
-            if(window.innerWidth/2 < clientPos.left+100){
-            	ele.style.right = window.innerWidth - clientPos.right + 'px';
-            }else{
-              ele.style.left = clientPos.left - 5 + 'px';
-            }
-              ele.style.overflow = 'auto';
-          }
-        }else{
-          this.querySelector('paper-material').removeAttribute('style');
-        }
       },
 
       /**
@@ -519,4 +521,3 @@ respectively.
     });
   })();
 </script>
-
