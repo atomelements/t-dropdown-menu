@@ -136,7 +136,7 @@ respectively.
       max-width:inherit!important;
   }
   :host([opened]) #overlay{
-    z-index: 1;
+    z-index: 3;
     top: 0;
     left: 0;
     right: 0;
@@ -144,8 +144,11 @@ respectively.
     position: fixed;
     background: rgba(0,0,0,0.6);
   }
+  
+  :host([opened]) paper-menu-button ::content paper-material{
+    z-index: 4;
+  }
   </style>
-    <div id="overlay" on-click="openClose"></div>
       <paper-menu-button
         id="menuButton"
         vertical-align="{{verticalAlign}}"
